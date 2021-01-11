@@ -32,3 +32,6 @@ jobs:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: "fs-open-pt11"
           heroku_email: ${{secrets.HEROKU_USER_EMAIL}}
+          healthcheck: "https://fs-open-pt11.herokuapp.com/health"
+          checkstring: "ok"
+          rollbackonhealthcheckfailed: true

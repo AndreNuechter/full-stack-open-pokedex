@@ -27,3 +27,8 @@ jobs:
           command: npm run test:e2e
           start: npm run start-prod
           wait-on: http://localhost:5000
+      - uses: akhileshns/heroku-deploy@v3.8.9 # This is the action
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: "https://fs-open-pt11.herokuapp.com/"
+          heroku_email: ${{secrets.HEROKU_USER_EMAIL}}

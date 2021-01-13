@@ -24,5 +24,6 @@ jobs:
         run: echo "$COMMIT_MESSAGES"
       - name: Skipping?
         env:
-          SKIP: ${{ contains('Hello world', 'llo') }}
+          COMMIT_MESSAGES: join(github.event.commits.*.message)
+          SKIP: ${{ contains($COMMIT_MESSAGES, 'skip') }}
         run: echo "$SKIP"

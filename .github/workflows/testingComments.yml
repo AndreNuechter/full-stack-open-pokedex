@@ -25,4 +25,4 @@ jobs:
       - name: Skipping?
         env:
           COMMIT_MESSAGES: ${{ toJson(github.event.commits.*.message) }}
-        run: echo join($COMMIT_MESSAGES)
+        run: echo "join($COMMIT_MESSAGES)"

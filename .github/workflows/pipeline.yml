@@ -14,40 +14,37 @@ jobs:
     env:
       DEPLOY_THIS: ${{ github.event_name == 'push' && !contains(join(toJson(github.event.commits.*.message)), '#skip') }}
     steps:
-      - name: test
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '12.x'
+      - name: npm install
+        run: npm i
+      - name: lint
+        run: npm run eslint
+      - name: build
+        run: npm run build
+      - name: unit tests
+        run: npm run test
+      - name: e2e tests
+        uses: cypress-io/github-action@v2
+        with:
+          command: npm run test:e2e
+          start: npm run start-prod
+          wait-on: http://localhost:5000
+      - uses: akhileshns/heroku-deploy@v3.8.9
         if: env.DEPLOY_THIS == 'true'
-        run: echo doing it
-      # - uses: actions/checkout@v2
-      # - uses: actions/setup-node@v1
-      #   with:
-      #     node-version: '12.x'
-      # - name: npm install
-      #   run: npm i
-      # - name: lint
-      #   run: npm run eslint
-      # - name: build
-      #   run: npm run build
-      # - name: unit tests
-      #   run: npm run test
-      # - name: e2e tests
-      #   uses: cypress-io/github-action@v2
-      #   with:
-      #     command: npm run test:e2e
-      #     start: npm run start-prod
-      #     wait-on: http://localhost:5000
-      # - uses: akhileshns/heroku-deploy@v3.8.9 # This is the action
-      #   if: ${{ DEPLOY_THIS }}
-      #   with:
-      #     heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-      #     heroku_app_name: "fs-open-pt11"
-      #     heroku_email: ${{secrets.HEROKU_USER_EMAIL}}
-      #     healthcheck: "https://fs-open-pt11.herokuapp.com/health"
-      #     checkstring: "ok"
-      #     rollbackonhealthcheckfailed: true
-      # - uses: actions/checkout@v2
-      # - name: Bump version and push tag
-      #   if: ${{ DEPLOY_THIS }}
-      #   uses: anothrNick/github-tag-action@1.33.0
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #     DEFAULT_BUMP: patch
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: "fs-open-pt11"
+          heroku_email: ${{secrets.HEROKU_USER_EMAIL}}
+          healthcheck: "https://fs-open-pt11.herokuapp.com/health"
+          checkstring: "ok"
+          rollbackonhealthcheckfailed: true
+      - uses: actions/checkout@v2
+      - name: Bump version and push tag
+        if: env.DEPLOY_THIS == 'true'
+        uses: anothrNick/github-tag-action@1.33.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DEFAULT_BUMP: patch

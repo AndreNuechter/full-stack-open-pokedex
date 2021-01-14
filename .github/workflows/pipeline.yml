@@ -12,10 +12,10 @@ jobs:
   simple_deployment_pipeline:
     runs-on: ubuntu-18.04
     env:
-      - DEPLOY_THIS: ${{ github.event_name == 'push' && !contains(join(toJson(github.event.commits.*.message)), '#skip') }}
+      DEPLOY_THIS: ${{ github.event_name == 'push' && !contains(join(toJson(github.event.commits.*.message)), '#skip') }}
     steps:
       - name: test
-        if: ${{ DEPLOY_THIS }}
+        if: DEPLOY_THIS
         run: echo doing it
       # - uses: actions/checkout@v2
       # - uses: actions/setup-node@v1

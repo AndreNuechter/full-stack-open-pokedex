@@ -15,7 +15,7 @@ jobs:
       DEPLOY_THIS: ${{ github.event_name == 'push' && !contains(join(toJson(github.event.commits.*.message)), '#skip') }}
     steps:
       - name: test
-        if: DEPLOY_THIS
+        if: env.DEPLOY_THIS === 'true'
         run: echo doing it
       # - uses: actions/checkout@v2
       # - uses: actions/setup-node@v1
